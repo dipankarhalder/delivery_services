@@ -5,7 +5,8 @@ const { msg } = require('../constant');
 const { authValidate } = require('../validation');
 const { validateFields, sendErrorResponse } = require('../utils');
 
-/* user signup */
+/* user signup
+* API - http://localhost:4001/api/v1/auth/signup */
 const userSignup = async (req, res) => {
   try {
     /* validate request body */
@@ -48,7 +49,8 @@ const userSignup = async (req, res) => {
   }
 };
 
-/* user signin */
+/* user signin
+* API - http://localhost:4001/api/v1/auth/signin */
 const userSignin = async (req, res) => {
   try {
     /* validate request body */
@@ -92,7 +94,8 @@ const userSignin = async (req, res) => {
   }
 };
 
-/* user signin */
+/* user signin
+*  API - http://localhost:4001/api/v1/auth/signout */
 const userSignout = async (req, res) => {
   try {
     res.clearCookie('authToken', {
