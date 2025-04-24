@@ -87,15 +87,13 @@ UserSchema.methods.generateAuthToken = function () {
   const payload = {
     userid: this._id,
     email: this.email,
-    firstName: this.firstName,
-    lastName: this.lastName,
-    role: this.role,
   };
 
   /* create token with secret key and expiration time */
-  return jwt.sign(payload, envConfig.JWTSECRET, {
+  const token = jwt.sign(payload, envConfig.JWTSECRET, {
     expiresIn: envConfig.EXPTIME,
   });
+  return token;
 };
 
 module.exports = mongoose.model('User', UserSchema);
