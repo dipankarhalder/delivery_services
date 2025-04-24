@@ -6,9 +6,9 @@ const { routers } = require('../../constant');
 const { auth } = require('../../controllers');
 
 /* authentication */
-router.post(routers.endPoints.signup, auth.userSignup);
-router.post(routers.endPoints.signin, auth.userSignin);
-router.post(routers.endPoints.signout, auth.userSignout);
+router.post(routers.end_points.signup, auth.userSignup);
+router.post(routers.end_points.signin, auth.userSignin);
+router.post(routers.end_points.signout, auth.userSignout);
 
 module.exports = {
   v1Routes: router,
