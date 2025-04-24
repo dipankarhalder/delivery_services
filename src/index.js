@@ -26,7 +26,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 /* application main endpoint */
-app.use(routers.endPoints.base, RootApiRouter);
+app.use(routers.end_points.base, RootApiRouter);
 
 /* handled undefined routes */
 app.use((req, res, next) => {

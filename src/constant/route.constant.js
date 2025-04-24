@@ -1,4 +1,4 @@
-const endPoints = {
+const end_points = {
   /* base route */
   base: '/api',
   v1Base: '/v1',
@@ -10,5 +10,5 @@ const endPoints = {
 };
 
 module.exports = {
-  endPoints,
+  end_points,
 };

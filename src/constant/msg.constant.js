@@ -11,7 +11,7 @@ const server = {
 
 /* common application msg */
 const app_msg = {
-  something_wrong: 'Something went wrong, please try again later.',
+  some_thing_wrong: 'Something went wrong, please try again later.',
   internal_server_error: 'Internal Server Error.',
   api_not_found: 'The API url not found.',
 };
@@ -22,6 +22,7 @@ const user_msg = {
   require_phone: 'Phone number should not be blank.',
   require_email: 'Email address should not be blank.',
   require_password: 'Password should not be blank.',
+  require_role: 'Role should be select a option.',
   require_old_password: 'Old password should not be blank.',
   require_new_password: 'New password should not be blank.',
 
