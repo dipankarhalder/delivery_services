@@ -4,6 +4,8 @@ const jwt = require('jsonwebtoken');
 const { envConfig } = require('../config');
 
 const saltNum = 10;
+const roles = ['super_admin', 'delivery', 'customer'];
+
 const UserSchema = new mongoose.Schema(
   {
     firstName: {
@@ -15,6 +17,11 @@ const UserSchema = new mongoose.Schema(
       type: String,
       required: true,
       trim: true,
+    },
+    role: {
+      type: String,
+      enum: roles,
+      default: 'super_admin',
     },
     email: {
       type: String,
@@ -30,6 +37,23 @@ const UserSchema = new mongoose.Schema(
       type: String,
       required: true,
       minlength: 6,
+    },
+    address: {
+      area: {
+        type: String,
+      },
+      landmark: {
+        type: String,
+      },
+      city: {
+        type: String,
+      },
+      state: {
+        type: String,
+      },
+      pincode: {
+        type: String,
+      },
     },
   },
   {

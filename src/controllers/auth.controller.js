@@ -9,31 +9,39 @@ const { validateFields, sendErrorResponse } = require('../utils');
 const userSignup = async (req, res) => {
   try {
     /* validate request body */
-    const { error, value } = authValidate.userInfoSchema.validate(req.body, {
+    const {
+      error,
+      value
+    } = authValidate.userInfoSchema.validate(req.body, {
       abortEarly: false,
     });
     if (error) {
-      return validateFields(res, error.details.map((detail) => detail.message).join(', '));
+      return validateFields(res,
+        error.details.map((detail) => detail.message).join(', ')
+      );
     }
 
     /* find the existing user via email */
-    const existingEmail = await User.findOne({ email: value.email });
+    const existingEmail = await User.findOne({
+      email: value.email
+    });
     if (existingEmail) {
-      return validateFields(res, msg.userMsg.email_already_exist);
+      return validateFields(res, msg.user_msg.email_already_exist);
     }
 
     /* new user */
     const user = new User({
-      name: value.name,
+      firstName: value.firstName,
+      lastName: value.lastName,
       email: value.email,
       password: value.password,
       phone: value.phone,
+      role: value.role,
     });
     await user.save();
-
     return res.status(StatusCodes.OK).json({
       status: StatusCodes.OK,
-      message: msg.userMsg.new_user_created,
+      message: msg.user_msg.new_user_created,
     });
   } catch (error) {
     return sendErrorResponse(res, error);
@@ -48,19 +56,23 @@ const userSignin = async (req, res) => {
       abortEarly: false,
     });
     if (error) {
-      return validateFields(res, error.details.map((detail) => detail.message).join(', '));
+      return validateFields(res,
+        error.details.map((detail) => detail.message).join(', ')
+      );
     }
 
     /* find the existing user via email */
-    const user = await User.findOne({ email: value.email });
+    const user = await User.findOne({
+      email: value.email
+    });
     if (!user) {
-      return validateFields(res, msg.userMsg.exist_user_email);
+      return validateFields(res, msg.user_msg.exist_user_email);
     }
 
     /* validate / compare the password */
     const isMatch = await user.comparePassword(value.password);
     if (!isMatch) {
-      return validateFields(res, msg.userMsg.user_wrong_password);
+      return validateFields(res, msg.user_msg.user_wrong_password);
     }
 
     /* generated token */
@@ -70,11 +82,10 @@ const userSignin = async (req, res) => {
       secure: envConfig.NODEENV,
       maxAge: envConfig.EXPTIME,
     });
-
     return res.status(StatusCodes.OK).json({
       status: StatusCodes.OK,
       token: token,
-      message: msg.userMsg.user_login_successfully,
+      message: msg.user_msg.user_login_successfully,
     });
   } catch (error) {
     return sendErrorResponse(res, error);
@@ -89,10 +100,9 @@ const userSignout = async (req, res) => {
       secure: envConfig.NODEENV,
       sameSite: 'Strict',
     });
-
     return res.status(StatusCodes.OK).json({
       status: StatusCodes.OK,
-      message: msg.userMsg.user_logout_successfully,
+      message: msg.user_msg.user_logout_successfully,
     });
   } catch (error) {
     return sendErrorResponse(res, error);
