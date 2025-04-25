@@ -28,6 +28,7 @@ router.delete(routers.end_points.get_category, auth_token, category.deleteCatego
 
 /* sub categories */
 router.post(routers.end_points.new_sub_category, auth_token, subcategory.createSubCategory);
+router.get(routers.end_points.all_sub_category, auth_token, subcategory.getAllSubCategories);
 
 module.exports = {
   v1Routes: router,

@@ -4,10 +4,14 @@ const { msg } = require('../constant');
 const { authValidate } = require('../validation');
 const { validateFields, sendErrorResponse, notFoundItem } = require('../utils');
 
-/* user profile */
+/*
+* @ API - Logged-in User Details
+* @ method - GET
+* @ end point - http://localhost:4001/api/v1/profile/me
+*/
 const getProfileDetails = async (req, res) => {
   try {
-    /* find the user information using userID */
+    /* find user by id */
     const user = await User.findById(req.user.userid).select('-password');
     if (!user) {
       return notFoundItem(res, msg.user_msg.user_not_found);
@@ -21,10 +25,16 @@ const getProfileDetails = async (req, res) => {
   }
 };
 
-/* update admin password */
+/*
+* @ API - Update Admin Password
+* @ method - PATCH
+* @ end point - http://localhost:4001/api/v1/profile/update-admin-password
+*/
 const updateAdminPassword = async (req, res) => {
   try {
     const decoded = req.user;
+
+    /* validate request body */
     const { error, value } = authValidate.passwordSchema.validate(req.body, {
       abortEarly: false,
     });
@@ -33,16 +43,23 @@ const updateAdminPassword = async (req, res) => {
         error.details.map((detail) => detail.message).join(', ')
       );
     }
-    const user = await User.findById(req.user.userid);
+
+    /* find the user by id */
+    const user = await User.findById(decoded.userid);
     if (!user) {
       return validateFields(res, msg.user_msg.user_not_found);
     }
+
+    /* compare the password */
     const isMatch = await user.comparePassword(value.oldPassword);
     if (!isMatch) {
       return validateFields(res, msg.user_msg.user_wrong_password);
     }
+
+    /* save updated password */
     user.password = value.newPassword;
     await user.save();
+
     return res.status(StatusCodes.OK).json({
       status: StatusCodes.OK,
       message: msg.user_msg.updated_user_password,
@@ -56,6 +73,4 @@ const updateAdminPassword = async (req, res) => {
 module.exports = {
   getProfileDetails,
   updateAdminPassword,
-  // getUserProfiles,
-  // updatePassword,
 };

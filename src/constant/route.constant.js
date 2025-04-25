@@ -19,6 +19,7 @@ const end_points = {
 
   /* sub category */
   new_sub_category: '/subcategory/add-new',
+  all_sub_category: '/subcategory/lists',
 };
 
 module.exports = {

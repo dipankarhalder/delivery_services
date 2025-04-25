@@ -6,10 +6,16 @@ const { msg } = require('../constant');
 const { categoryValidate } = require('../validation');
 const { validateFields, sendErrorResponse, notFoundItem } = require('../utils');
 
-/* create category */
+/*
+* @ API - Add New Category
+* @ method - POST
+* @ end point - http://localhost:4001/api/v1/category/add-new
+*/
 const createCategory = async (req, res) => {
   try {
     const decoded = req.user;
+
+    /* validate request body */
     const { error, value } = categoryValidate.categoryInfoSchema.validate(req.body, {
       abortEarly: false,
     });
@@ -18,6 +24,8 @@ const createCategory = async (req, res) => {
         error.details.map((detail) => detail.message).join(', ')
       );
     }
+
+    /* find existing category */
     const { name, desc } = value;
     const existingCategory = await Category.findOne({
       name,
@@ -25,6 +33,8 @@ const createCategory = async (req, res) => {
     if (existingCategory) {
       return validateFields(res, msg.category_msg.category_already_exist);
     }
+
+    /* find the user information */
     const user = await User.findById(decoded.userid).select('-password');
     const userInfo = {
       _id: user._id,
@@ -32,13 +42,18 @@ const createCategory = async (req, res) => {
       lastName: user.lastName,
       role: user.role,
     }
+
+    /* new category */
     const newCategory = new Category({
       name,
       desc,
       user: userInfo,
       lastEditedBy: userInfo,
     });
+
+    /* save new category */
     await newCategory.save();
+
     return res.status(StatusCodes.OK).json({
       status: StatusCodes.OK,
       category: newCategory,
@@ -49,10 +64,16 @@ const createCategory = async (req, res) => {
   }
 };
 
-/* get all categories */
+/*
+* @ API - List of Categories
+* @ method - GET
+* @ end point - http://localhost:4001/api/v1/category/lists
+*/
 const getAllCategories = async (req, res) => {
   try {
+    /* find category */
     const categories = await Category.find();
+
     return res.status(StatusCodes.OK).json({
       status: StatusCodes.OK,
       list: categories,
@@ -62,11 +83,18 @@ const getAllCategories = async (req, res) => {
   }
 };
 
-/* get category */
+/*
+* @ API - Category Details
+* @ method - GET
+* @ end point - http://localhost:4001/api/v1/category/:id
+*/
 const getCategory = async (req, res) => {
   try {
     const categoryId = req.params.id;
+
+    /* find category by ID */
     const categoryDetails = await Category.findById(categoryId);
+
     return res.status(StatusCodes.OK).json({
       status: StatusCodes.OK,
       details: categoryDetails,
@@ -76,11 +104,17 @@ const getCategory = async (req, res) => {
   }
 };
 
-/* edit category */
+/*
+* @ API - Edit Category Details
+* @ method - PATCH
+* @ end point - http://localhost:4001/api/v1/category/:id
+*/
 const editCategory = async (req, res) => {
   try {
     const decoded = req.user;
     const categoryId = req.params.id;
+
+    /* validate request body */
     const { error, value } = categoryValidate.categoryInfoSchema.validate(req.body, {
       abortEarly: false,
     });
@@ -89,10 +123,14 @@ const editCategory = async (req, res) => {
         error.details.map((detail) => detail.message).join(', ')
       );
     }
+
+    /* check the category is available or not */
     const category = await Category.findById(categoryId);
     if (!category) {
       return notFoundItem(res, msg.category_msg.category_not_found);
     }
+
+    /* find the user information */
     const user = await User.findById(decoded.userid).select('-password');
     const userInfo = {
       _id: user._id,
@@ -100,12 +138,21 @@ const editCategory = async (req, res) => {
       lastName: user.lastName,
       role: user.role,
     }
+
+    /* updated category information */
     const updateCategory = {
       name: value.name || category.name,
       desc: value.desc || category.desc,
       lastEditedBy: userInfo,
     }
-    const updatedNewCategory = await Category.findByIdAndUpdate(categoryId, updateCategory, { new: true });
+
+    /* update information */
+    const updatedNewCategory = await Category.findByIdAndUpdate(
+      categoryId,
+      updateCategory,
+      { new: true }
+    );
+
     return res.status(StatusCodes.OK).json({
       status: StatusCodes.OK,
       details: updatedNewCategory,
@@ -116,15 +163,24 @@ const editCategory = async (req, res) => {
   }
 };
 
-/* delete category */
+/*
+* @ API - Delete Category Details
+* @ method - DELETE
+* @ end point - http://localhost:4001/api/v1/category/:id
+*/
 const deleteCategory = async (req, res) => {
   try {
     const categoryId = req.params.id;
+
+    /* check the category is available or not */
     const category = await Category.findById(categoryId);
     if (!category) {
       return notFoundItem(res, msg.category_msg.category_not_found);
     }
+
+    /* delete the category */
     await Category.findByIdAndDelete(categoryId);
+
     return res.status(StatusCodes.OK).json({
       status: StatusCodes.OK,
       message: msg.category_msg.category_deleted,
