@@ -16,6 +16,7 @@ const app_msg = {
   api_not_found: 'The API url not found.',
 };
 
+/* profile msg */
 const user_msg = {
   require_first_name: 'First name should not be blank.',
   require_last_name: 'last name should not be blank.',
@@ -49,10 +50,25 @@ const user_msg = {
   access_denied: 'Access denied. No token provided.',
 };
 
+/* categories msg */
+const category_msg = {
+  require_name: 'Category name should not be blank.',
+  require_desc: 'Category description should not be blank.',
+
+  max_name: 'Category name should not be more than 60 characters.',
+  max_desc: 'Category description should not be more than 255 characters.',
+
+  category_already_exist: 'Provided category is already exist.',
+  new_category_created: 'New category created successfully.',
+  category_not_found: 'The category is not found.',
+  category_updated: 'Category updated successfully.',
+  category_deleted: 'Category deleted successfully.',
+};
+
 module.exports = {
   db_msg,
   server,
   app_msg,
   user_msg,
-  // deliveryMsg,
+  category_msg
 };
