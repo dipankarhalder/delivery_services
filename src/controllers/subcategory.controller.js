@@ -7,10 +7,16 @@ const { msg } = require('../constant');
 const { subCategoryValidate } = require('../validation');
 const { validateFields, sendErrorResponse, notFoundItem } = require('../utils');
 
-/* create sub category */
+/*
+* @ API - Add New Sub Category
+* @ method - POST
+* @ end point - http://localhost:4001/api/v1/subcategory/add-new
+*/
 const createSubCategory = async (req, res) => {
   try {
     const decoded = req.user;
+
+    /* validate request body */
     const { error, value } = subCategoryValidate.subCategoryInfoSchema.validate(req.body, {
       abortEarly: false,
     });
@@ -19,6 +25,8 @@ const createSubCategory = async (req, res) => {
         error.details.map((detail) => detail.message).join(', ')
       );
     }
+
+    /* find existing sub category */
     const { name, desc, category } = value;
     const existingSubCategory = await Subcategory.findOne({
       name,
@@ -26,11 +34,15 @@ const createSubCategory = async (req, res) => {
     if (existingSubCategory) {
       return validateFields(res, msg.sub_category_msg.sub_category_already_exist);
     }
+
+    /* find the category information */
     const categoryDetails = await Category.findById(category);
     const categoryInfo = {
       _id: categoryDetails._id,
       name: categoryDetails.name,
     }
+
+    /* find the user information */
     const user = await User.findById(decoded.userid).select('-password');
     const userInfo = {
       _id: user._id,
@@ -38,6 +50,8 @@ const createSubCategory = async (req, res) => {
       lastName: user.lastName,
       role: user.role,
     }
+
+    /* new sub category */
     const newSubCategory = new Subcategory({
       name,
       desc,
@@ -45,7 +59,10 @@ const createSubCategory = async (req, res) => {
       user: userInfo,
       lastEditedBy: userInfo,
     });
+
+    /* save new sub category */
     await newSubCategory.save();
+
     return res.status(StatusCodes.OK).json({
       status: StatusCodes.OK,
       category: newSubCategory,
@@ -55,7 +72,27 @@ const createSubCategory = async (req, res) => {
     return sendErrorResponse(res, error);
   }
 };
+/*
+* @ API - List of Sub Categories
+* @ method - GET
+* @ end point - http://localhost:4001/api/v1/subcategory/lists
+*/
+const getAllSubCategories = async (req, res) => {
+  try {
+    /* find sub category */
+    const subcategories = await Subcategory.find();
+
+    return res.status(StatusCodes.OK).json({
+      status: StatusCodes.OK,
+      list: subcategories,
+    });
+  } catch (error) {
+    return sendErrorResponse(res, error);
+  }
+};
+
 
 module.exports = {
   createSubCategory,
+  getAllSubCategories,
 };

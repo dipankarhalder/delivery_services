@@ -5,15 +5,15 @@ const { msg } = require('../constant');
 const { authValidate } = require('../validation');
 const { validateFields, sendErrorResponse } = require('../utils');
 
-/* user signup
-* API - http://localhost:4001/api/v1/auth/signup */
+/*
+* @ API - User Register
+* @ method - POST
+* @ end point - http://localhost:4001/api/v1/auth/sign-up
+*/
 const userSignup = async (req, res) => {
   try {
     /* validate request body */
-    const {
-      error,
-      value
-    } = authValidate.userInfoSchema.validate(req.body, {
+    const { error, value } = authValidate.userInfoSchema.validate(req.body, {
       abortEarly: false,
     });
     if (error) {
@@ -39,7 +39,10 @@ const userSignup = async (req, res) => {
       phone: value.phone,
       role: value.role,
     });
+
+    /* save the user */
     await user.save();
+
     return res.status(StatusCodes.OK).json({
       status: StatusCodes.OK,
       message: msg.user_msg.new_user_created,
@@ -49,8 +52,11 @@ const userSignup = async (req, res) => {
   }
 };
 
-/* user signin
-* API - http://localhost:4001/api/v1/auth/signin */
+/*
+* @ API - User Login
+* @ method - POST
+* @ end point - http://localhost:4001/api/v1/auth/sign-in
+*/
 const userSignin = async (req, res) => {
   try {
     /* validate request body */
@@ -84,6 +90,7 @@ const userSignin = async (req, res) => {
       secure: envConfig.NODEENV,
       maxAge: envConfig.EXPTIME,
     });
+
     return res.status(StatusCodes.OK).json({
       status: StatusCodes.OK,
       token: token,
@@ -94,15 +101,20 @@ const userSignin = async (req, res) => {
   }
 };
 
-/* user signin
-*  API - http://localhost:4001/api/v1/auth/signout */
+/*
+* @ API - User Logout
+* @ method - POST
+* @ end point - http://localhost:4001/api/v1/auth/sign-out
+*/
 const userSignout = async (req, res) => {
   try {
+    /* sign-out and clear cookie */
     res.clearCookie('authToken', {
       httpOnly: true,
       secure: envConfig.NODEENV,
       sameSite: 'Strict',
     });
+
     return res.status(StatusCodes.OK).json({
       status: StatusCodes.OK,
       message: msg.user_msg.user_logout_successfully,
