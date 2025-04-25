@@ -91,8 +91,31 @@ const getAllSubCategories = async (req, res) => {
   }
 };
 
+/*
+* @ API - Category Details
+* @ method - GET
+* @ end point - http://localhost:4001/api/v1/subcategory/:id
+*/
+const getSubCategory = async (req, res) => {
+  try {
+    const categoryId = req.params.id;
+
+    /* find category by ID */
+    const subCategoryDetails = await Subcategory.findById(categoryId);
+
+    return res.status(StatusCodes.OK).json({
+      status: StatusCodes.OK,
+      details: subCategoryDetails,
+    });
+  } catch (error) {
+    return sendErrorResponse(res, error);
+  }
+};
+
+
 
 module.exports = {
   createSubCategory,
   getAllSubCategories,
+  getSubCategory,
 };
