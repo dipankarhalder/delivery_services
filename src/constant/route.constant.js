@@ -12,10 +12,13 @@ const end_points = {
   profile_details: '/profile/me',
   update_password: '/profile/update-admin-password',
 
-  /* categories */
+  /* category */
   new_category: '/category/add-new',
   all_categories: '/category/lists',
   get_category: '/category/:id',
+
+  /* sub category */
+  new_sub_category: '/subcategory/add-new',
 };
 
 module.exports = {

@@ -6,7 +6,8 @@ const { auth_token } = require('../../middleware');
 const {
   auth,
   profile,
-  category
+  category,
+  subcategory
 } = require('../../controllers');
 
 /* authentication */
@@ -24,6 +25,9 @@ router.get(routers.end_points.all_categories, auth_token, category.getAllCategor
 router.get(routers.end_points.get_category, auth_token, category.getCategory);
 router.patch(routers.end_points.get_category, auth_token, category.editCategory);
 router.delete(routers.end_points.get_category, auth_token, category.deleteCategory);
+
+/* sub categories */
+router.post(routers.end_points.new_sub_category, auth_token, subcategory.createSubCategory);
 
 module.exports = {
   v1Routes: router,
