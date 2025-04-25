@@ -5,13 +5,14 @@ const { msg } = require('../constant');
 
 const verifyToken = (req, res, next) => {
   try {
-    const token = req.cookies.authToken;
-    if (!token) {
+    const authHeader = req.headers['authorization'];
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
       return res.status(StatusCodes.UNAUTHORIZED).json({
         status: StatusCodes.UNAUTHORIZED,
         message: msg.user_msg.access_denied,
       });
     }
+    const token = authHeader.split(' ')[1];
     const decoded = jwt.verify(token, envConfig.JWTSECRET);
     if (!decoded) {
       return res.status(StatusCodes.UNAUTHORIZED).json({

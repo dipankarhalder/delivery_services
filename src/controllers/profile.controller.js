@@ -21,7 +21,7 @@ const getProfileDetails = async (req, res) => {
   }
 };
 
-/* update password */
+/* update admin password */
 const updateAdminPassword = async (req, res) => {
   try {
     const decoded = req.user;
