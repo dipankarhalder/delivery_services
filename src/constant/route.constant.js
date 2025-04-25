@@ -4,13 +4,18 @@ const end_points = {
   v1Base: '/v1',
 
   /* auth */
-  signup: '/auth/signup',
-  signin: '/auth/signin',
-  signout: '/auth/signout',
+  sign_up: '/auth/sign-up',
+  sign_in: '/auth/sign-in',
+  sign_out: '/auth/sign-out',
 
   /* profile */
   profile_details: '/profile/me',
-  update_password: '/profile/update-password',
+  update_password: '/profile/update-admin-password',
+
+  /* categories */
+  new_category: '/category/add-new',
+  all_categories: '/category/lists',
+  get_category: '/category/:id',
 };
 
 module.exports = {
