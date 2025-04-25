@@ -18,7 +18,6 @@ const createCategory = async (req, res) => {
         error.details.map((detail) => detail.message).join(', ')
       );
     }
-
     const { name, desc } = value;
     const existingCategory = await Category.findOne({
       name,
@@ -26,7 +25,6 @@ const createCategory = async (req, res) => {
     if (existingCategory) {
       return validateFields(res, msg.category_msg.category_already_exist);
     }
-
     const user = await User.findById(decoded.userid).select('-password');
     const userInfo = {
       _id: user._id,
@@ -34,14 +32,12 @@ const createCategory = async (req, res) => {
       lastName: user.lastName,
       role: user.role,
     }
-
     const newCategory = new Category({
       name,
       desc,
       user: userInfo,
       lastEditedBy: userInfo,
     });
-
     await newCategory.save();
     return res.status(StatusCodes.OK).json({
       status: StatusCodes.OK,

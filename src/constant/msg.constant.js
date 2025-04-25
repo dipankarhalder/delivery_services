@@ -65,10 +65,27 @@ const category_msg = {
   category_deleted: 'Category deleted successfully.',
 };
 
+/* sub categories msg */
+const sub_category_msg = {
+  require_name: 'Sub category name should not be blank.',
+  require_desc: 'Sub category description should not be blank.',
+  require_category: 'Category should not be blank.',
+
+  max_name: 'Sub category name should not be more than 60 characters.',
+  max_desc: 'Sub category description should not be more than 255 characters.',
+
+  sub_category_already_exist: 'Provided sub category is already exist.',
+  new_sub_category_created: 'New sub category created successfully.',
+  sub_category_not_found: 'The sub category is not found.',
+  sub_category_updated: 'Sub category updated successfully.',
+  sub_category_deleted: 'Sub category deleted successfully.',
+};
+
 module.exports = {
   db_msg,
   server,
   app_msg,
   user_msg,
-  category_msg
+  category_msg,
+  sub_category_msg
 };
