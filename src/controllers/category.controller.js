@@ -43,10 +43,14 @@ const createCategory = async (req, res) => {
       role: user.role,
     }
 
+    /* Handle image file if exists */
+    const imagePath = req.file ? req.file.path : null;
+
     /* new category */
     const newCategory = new Category({
       name,
       desc,
+      image: imagePath,
       user: userInfo,
       lastEditedBy: userInfo,
     });

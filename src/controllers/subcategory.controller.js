@@ -98,14 +98,41 @@ const getAllSubCategories = async (req, res) => {
 */
 const getSubCategory = async (req, res) => {
   try {
-    const categoryId = req.params.id;
+    const sub_categoryId = req.params.id;
 
     /* find category by ID */
-    const subCategoryDetails = await Subcategory.findById(categoryId);
+    const subCategoryDetails = await Subcategory.findById(sub_categoryId);
 
     return res.status(StatusCodes.OK).json({
       status: StatusCodes.OK,
       details: subCategoryDetails,
+    });
+  } catch (error) {
+    return sendErrorResponse(res, error);
+  }
+};
+
+/*
+* @ API - Delete Category Details
+* @ method - DELETE
+* @ end point - http://localhost:4001/api/v1/subcategory/:id
+*/
+const deleteSubCategory = async (req, res) => {
+  try {
+    const sub_categoryId = req.params.id;
+
+    /* check the sub category is available or not */
+    const sub_category = await Subcategory.findById(sub_categoryId);
+    if (!sub_category) {
+      return notFoundItem(res, msg.sub_category_msg.sub_category_not_found);
+    }
+
+    /* delete the sub category */
+    await Subcategory.findByIdAndDelete(sub_categoryId);
+
+    return res.status(StatusCodes.OK).json({
+      status: StatusCodes.OK,
+      message: msg.sub_category_msg.sub_category_deleted,
     });
   } catch (error) {
     return sendErrorResponse(res, error);
@@ -118,4 +145,5 @@ module.exports = {
   createSubCategory,
   getAllSubCategories,
   getSubCategory,
+  deleteSubCategory,
 };
