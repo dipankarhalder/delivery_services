@@ -1,3 +1,4 @@
+const path = require('path');
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
@@ -24,6 +25,9 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+
+/* serve uploaded images statically */
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 /* application main endpoint */
 app.use(routers.end_points.base, RootApiRouter);
