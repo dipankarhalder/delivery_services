@@ -20,6 +20,7 @@ const end_points = {
   /* sub category */
   new_sub_category: '/subcategory/add-new',
   all_sub_category: '/subcategory/lists',
+  get_sub_category: '/subcategory/:id',
 };
 
 module.exports = {

@@ -13,6 +13,10 @@ const CategorySchema = new Schema(
       required: true,
       maxlength: 255,
     },
+    image: {
+      type: String,
+      default: null,
+    },
     user: {
       _id: mongoose.Schema.Types.ObjectId,
       firstName: String,
